@@ -5,8 +5,9 @@ import 'dart:convert';
 import 'package:yahoo_fin_api/src/helpers/helper_functions.dart';
 import 'package:yahoo_fin_api/src/models/exception.dart';
 import 'package:yahoo_fin_api/src/secret.dart';
-import 'package:yahoo_fin_api/yahoo_fin_api.dart';
 import 'package:http/http.dart' as http;
+
+import 'src/models/models.dart';
 
 Future<StockData> getData({required String ticker}) async {
   try {
