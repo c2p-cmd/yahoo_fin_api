@@ -1,11 +1,11 @@
 library yahoo_fin_api;
 
-export 'src/models/exception.dart';
 export 'src/models/models.dart';
 
 import 'dart:convert';
 
 import 'package:yahoo_fin_api/src/helpers/helper_functions.dart';
+import 'package:yahoo_fin_api/src/models/exception.dart';
 import 'package:yahoo_fin_api/src/secret.dart';
 import 'package:yahoo_fin_api/yahoo_fin_api.dart';
 import 'package:http/http.dart' as http;
