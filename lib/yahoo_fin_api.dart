@@ -35,3 +35,35 @@ Future<StockData> getData({required String ticker}) async {
     rethrow;
   }
 }
+
+Future<StockSearchResult> searchForStock({required String ticker}) async {
+  try {
+    final qParams = {
+      'q' : ticker,
+      'region' : 'IN',
+      'newsCount' : '0',
+    };
+    final uri = Uri.https(baseUrl, path, qParams);
+    final response = await http.get(uri);
+
+    if (response.statusCode != 200) {
+      throw YahooFinException(
+        statusCode: response.statusCode,
+        message: "Error due to ${response.reasonPhrase}.",
+      );
+    }
+
+    final decodedMap = jsonDecode(utf8.decode(response.bodyBytes));
+
+    if (isSearchBodyValid(decodedMap)) {
+      return StockSearchResult.fromJson(decodedMap);
+    } else {
+      throw const YahooFinException(
+        statusCode: 404,
+        message: "The stock you are looking for cannot be found!",
+      );
+    }
+  } catch (_) {
+    rethrow;
+  }
+}
