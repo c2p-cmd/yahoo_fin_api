@@ -4,6 +4,9 @@ import 'package:yahoo_fin_api/yahoo_fin_api.dart';
 
 void main() {
   test('gets stock data!', () async {
+    final stockSearch = await searchForStock(ticker: 'idea');
+    expect(stockSearch.stockQuotes.any((element) => element.shortName.contains('VODAFONE')), true);
+
     final stockData = await getData(ticker: "RBA.NS");
     expect(stockData.shortName, "RESTAURANT BRAND ASIA LTD");
   });
