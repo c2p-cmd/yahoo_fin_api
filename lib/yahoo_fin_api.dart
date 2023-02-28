@@ -36,12 +36,53 @@ Future<StockData> getData({required String ticker}) async {
   }
 }
 
+Future<List<StockData>> getMultipleStocks(List<String> tickers) async {
+  try {
+    var ticker = tickers[0];
+    for (int i = 1; i < tickers.length; i++) {
+      var element = tickers[i];
+      ticker += ',$element';
+    }
+    final response = await http.get(Uri.parse("$apiUrl$ticker"));
+
+    if (response.statusCode != 200) {
+      throw YahooFinException(
+        statusCode: response.statusCode,
+        message: "Error due to ${response.reasonPhrase}.",
+      );
+    }
+
+    final decodedBodyMap = jsonDecode(utf8.decode(response.bodyBytes));
+
+    if (decodedBodyMap['error'] != null) {
+      throw YahooFinException(
+        statusCode: response.statusCode,
+        message: decodedBodyMap['error'].toString(),
+      );
+    }
+
+    if (isBodyValid(decodedBodyMap)) {
+      final List<dynamic> results = decodedBodyMap['quoteResponse']['result'];
+      return List<StockData>.from(
+        results.map((result) => StockData.fromJson(result)),
+      );
+    } else {
+      throw const YahooFinException(
+        statusCode: 404,
+        message: "The stocks you are looking for cannot be found!",
+      );
+    }
+  } catch (_) {
+    rethrow;
+  }
+}
+
 Future<StockSearchResult> searchForStock({required String ticker}) async {
   try {
     final qParams = {
-      'q' : ticker,
-      'region' : 'IN',
-      'newsCount' : '0',
+      'q': ticker,
+      'region': 'IN',
+      'newsCount': '0',
     };
     final uri = Uri.https(baseUrl, path, qParams);
     final response = await http.get(uri);
