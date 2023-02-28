@@ -8,7 +8,9 @@ class StockSearchResult {
   );
 
   factory StockSearchResult.fromJson(Map<String, dynamic> jsonMap) {
-    final List<StockQuote> quotes = List.from(jsonMap['quotes'].map((e) => StockQuote.fromJson(e)));
+    final List<StockQuote> quotes = List.from(
+      jsonMap['quotes'].map((e) => StockQuote.fromJson(e)),
+    );
     return StockSearchResult(quotes, jsonMap['count']);
   }
 
@@ -68,10 +70,12 @@ class StockQuote {
 
 class StockData {
   final String ticker;
-  final String shortName, longName;
+  final String shortName;
+  final String longName;
   final double regularMarketChangePercent,
       regularMarketChange,
-      regularMarketPrice;
+      regularMarketPrice,
+      regularMarketOpen;
   final int? marketCap;
 
   StockData({
@@ -81,32 +85,38 @@ class StockData {
     required this.regularMarketChangePercent,
     required this.regularMarketChange,
     required this.regularMarketPrice,
+    required this.regularMarketOpen,
     this.marketCap,
   });
 
-  factory StockData.fromJson(Map<String, dynamic> jsonMap) => StockData(
-        ticker: jsonMap['symbol'],
-        shortName: jsonMap['shortName'],
-        longName: jsonMap['longName'],
-        regularMarketChangePercent: jsonMap['regularMarketChangePercent'],
-        regularMarketChange: jsonMap['regularMarketChange'],
-        regularMarketPrice: jsonMap['regularMarketPrice'],
-        marketCap: jsonMap['marketCap'],
-      );
+  factory StockData.fromJson(Map<String, dynamic> jsonMap) {
+    return StockData(
+      ticker: jsonMap['symbol'],
+      shortName: jsonMap['shortName'],
+      longName: jsonMap['longName'],
+      regularMarketChangePercent: jsonMap['regularMarketChangePercent'],
+      regularMarketChange: jsonMap['regularMarketChange'],
+      regularMarketPrice: jsonMap['regularMarketPrice'],
+      regularMarketOpen: jsonMap['regularMarketOpen'],
+      marketCap: jsonMap['marketCap'],
+    );
+  }
 
   factory StockData.fromJsonWithName(
     String ticker,
     Map<String, dynamic> jsonMap,
-  ) =>
-      StockData(
-        ticker: ticker.toUpperCase(),
-        shortName: jsonMap['shortName'],
-        longName: jsonMap['longName'],
-        regularMarketChangePercent: jsonMap['regularMarketChangePercent'],
-        regularMarketChange: jsonMap['regularMarketChange'],
-        regularMarketPrice: jsonMap['regularMarketPrice'],
-        marketCap: jsonMap['marketCap'],
-      );
+  ) {
+    return StockData(
+      ticker: ticker.toUpperCase(),
+      shortName: jsonMap['shortName'],
+      longName: jsonMap['longName'],
+      regularMarketOpen: jsonMap['regularMarketOpen'],
+      regularMarketChangePercent: jsonMap['regularMarketChangePercent'],
+      regularMarketChange: jsonMap['regularMarketChange'],
+      regularMarketPrice: jsonMap['regularMarketPrice'],
+      marketCap: jsonMap['marketCap'],
+    );
+  }
 
   @override
   String toString() {
